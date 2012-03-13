@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+import argparse
+import csv
+import itertools
+from csvmergeutil import find_common_header, find_common_header_indexes, \
+    find_and_pop_rows_to_merge
+import sys
+import os
+
+
+parser = argparse.ArgumentParser(description="Merge 2 CSV files")
+parser.add_argument('main_csv_file', type=argparse.FileType())
+parser.add_argument('merge_csv_file', nargs='+', type=argparse.FileType())
+parser.add_argument('--merge-field-name', '-f',
+                    help="The name of the field used to merge these CSV files")
+args = parser.parse_args()
+
+csv_files = [args.main_csv_file] + args.merge_csv_file
+csv_readers = [csv.reader(x) for x in csv_files]
+first_rows = [x.next() for x in csv_readers]
+common_header = find_common_header(first_rows, args)
+common_header_indexes = find_common_header_indexes(first_rows, common_header)
+
+writer = csv.writer(sys.stdout)
+csv_file_data_sets = [list(x) for x in csv_readers]
+
+trimmed_first_rows = [common_header]
+for i, first_row in enumerate(first_rows):
+    first_row_copy = list(first_row)
+    first_row_copy.pop(common_header_indexes[i])
+    filename = os.path.split(csv_files[i].name)[-1]
+    first_row_copy = ["{x} ({filename})".format(x=x, filename=filename) for x \
+                      in first_row_copy]
+    trimmed_first_rows += first_row_copy
+writer.writerow(trimmed_first_rows)
+
+
+for csv_file_data_index, csv_file_data in enumerate(csv_file_data_sets):
+    for row in csv_file_data:
+        common_item_value = row[common_header_indexes[csv_file_data_index]]
+        rows_to_merge = find_and_pop_rows_to_merge(
+            common_item_value, csv_file_data_sets, common_header_indexes,
+            first_rows)
+        writer.writerow(list(itertools.chain([common_item_value], *rows_to_merge)))
