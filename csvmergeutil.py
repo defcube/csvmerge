@@ -41,3 +41,10 @@ def find_and_pop_rows_to_merge(common_item_value, csv_file_data_sets,
             csv_file_data_set.pop(matching_rows[0][0])
     return res
 
+
+
+def clean_data_sets(csv_file_data_sets):
+    output_sets = []
+    for csv_file_data in csv_file_data_sets:
+        output_sets.append([x for x in csv_file_data if x])
+    return output_sets

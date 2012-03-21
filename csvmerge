@@ -3,7 +3,7 @@ import argparse
 import csv
 import itertools
 from csvmergeutil import find_common_header, find_common_header_indexes, \
-    find_and_pop_rows_to_merge
+    find_and_pop_rows_to_merge, clean_data_sets
 import sys
 import os
 
@@ -22,7 +22,7 @@ common_header = find_common_header(first_rows, args)
 common_header_indexes = find_common_header_indexes(first_rows, common_header)
 
 writer = csv.writer(sys.stdout)
-csv_file_data_sets = [list(x) for x in csv_readers]
+csv_file_data_sets = clean_data_sets([list(x) for x in csv_readers])
 
 trimmed_first_rows = [common_header]
 for i, first_row in enumerate(first_rows):
