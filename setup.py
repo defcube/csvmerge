@@ -2,7 +2,7 @@
 from distutils.core import setup
 import os
 readme = open(os.path.dirname(os.path.realpath(__file__)) +\
-        'README.rst').read()
+        '/README.rst').read()
 setup(
     name='csvmerge',
     version='1.0.8',
