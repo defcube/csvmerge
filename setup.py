@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from distutils.core import setup
 import os
-readme = open('README.rst').read()
-
+readme = os.path.dirname(os.path.realpath(__file__)) + \
+         open('README.rst').read()
 setup(
     name='csvmerge',
     version='1.0.2',
