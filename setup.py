@@ -5,7 +5,7 @@ readme = open('README.rst').read()
 
 setup(
     name='csvmerge',
-    version='1.0.1',
+    version='1.0.2',
     author_email='gattster@gmail.com',
     author='Philip Gatt',
     py_modules=['csvmergeutil'],
